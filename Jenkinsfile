@@ -3,7 +3,7 @@ pipeline {
 
     stages {
 
-        stage ('Build Image') {
+        stage ('Build Docker Image') {
             steps {
                 script {
                     // adicionei v na versão para seguir o padrão que foi utilizando nos dias anteriores
@@ -12,7 +12,7 @@ pipeline {
             }
         }
 
-        stage ('Push Image') {
+        stage ('Push Docker Image') {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
@@ -22,6 +22,15 @@ pipeline {
                 }
             }
         }
+
+        stage ('Deploy Kubernetes') {
+            steps {
+                withKubeConfig ([credentialsId: 'kubeconfig']) {
+                    sh 'kubectl apply -f ./k8s/deployment.yaml'
+                }
+            }
+        }
+
 
     }
 }
