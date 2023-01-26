@@ -3,14 +3,15 @@ pipeline {
 
     stages {
 
-        stage ('Build Docker Image') {
-            steps{
+        stage ('Build Image') {
+            steps {
                 script {
-                    dockerapp = docker.buid("deividfae/kube-news:${env.BUILD_ID}", '-f ./src/Dockerfile', './src')
-                }
+                    dockerapp = docker.build("deividfae/kube-news:${env.BUILD_ID}", '-f ./src/Dockerfile ./src') 
+                }                
             }
         }
-        stage ('Push Docker Image') {
+
+        stage ('Push Image') {
             steps {
                 script {
                     docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
@@ -19,7 +20,6 @@ pipeline {
                     }
                 }
             }
-
         }
 
     }
