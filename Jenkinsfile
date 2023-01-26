@@ -6,6 +6,7 @@ pipeline {
         stage ('Build Image') {
             steps {
                 script {
+                    // adicionei v na versão para seguir o padrão que foi utilizando nos dias anteriores
                     dockerapp = docker.build("deividfae/kube-news:v${env.BUILD_ID}", '-f ./src/Dockerfile ./src') 
                 }                
             }
