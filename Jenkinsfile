@@ -22,6 +22,7 @@ pipeline {
                 }
             }
         }
+        
 
         stage ('Deploy Kubernetes') {
             environment {
