@@ -55,7 +55,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: deividfae/kube-news:v2
+          image: deividfae/kube-news:v1
           ports:
           - containerPort: 8080
           env:
