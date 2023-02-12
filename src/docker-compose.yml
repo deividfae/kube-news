@@ -1,0 +1,56 @@
+version: '3.8'
+
+volumes:
+  postgre_vol:
+  kubenews_vol:
+  pgadmin_vol:
+
+networks:
+  postgre_net:
+    driver: bridge
+
+services:
+  pgadmin:
+    image: dpage/pgadmin4:6.20
+    networks:
+      - postgre_net
+    depends_on:
+      - postgre
+    environment:
+      PGADMIN_DEFAULT_EMAIL: deividfae@yahoo.com.br
+      PGADMIN_DEFAULT_PASSWORD: pgadminpwd
+      PGADMIN_LISTEN_PORT: 80
+      POSTGRES_PASSWORD: postgrepwd
+      POSTGRES_USER: postgreuser
+      POSTGRES_DB: kubenewsdb
+    ports:
+      - 8082:80
+    volumes:
+      - pgadmin_vol:/app
+
+  postgre:
+    image: postgres:15.2
+    networks:
+      - postgre_net
+    volumes:
+      - postgre_vol:/data/db
+    environment:
+      POSTGRES_PASSWORD: postgrepwd
+      POSTGRES_USER: postgreuser
+      POSTGRES_DB: kubenewsdb    
+  kube-news:
+    image: deividfae/kube-news:v3
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    networks:
+      - postgre_net
+    volumes:
+      - kubenews_vol:/app
+    environment:
+      DB_DATABASE: kubenewsdb
+      DB_USERNAME: postgreuser
+      DB_PASSWORD: postgrepwd
+      DB_HOST: postgre
+    ports:
+      - 8080:8080
